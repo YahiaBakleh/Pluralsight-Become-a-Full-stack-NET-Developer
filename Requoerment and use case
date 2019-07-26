@@ -1,0 +1,127 @@
+Projext Name : GigHub 
+
+Project Requirement : 
+
+    -  GigHub is a mini social network that makes it realy easy
+       for live music lover to track the gigs of their favorite artists 
+
+    - Artists can sing up and list their gigs. When adding a gig they should specify 
+      the date/time , location and gener of the gig 
+
+    - An artists should have a page called My Upcoming Gigs .
+      From there , they should be able to edit or remove an 
+      existing gig, or add another gig to the list 
+    
+    - user should be able to view all upcoming gigs or search 
+      them by artist, gener or location , they should be able to 
+      view details of a gig and add it to their calender.
+    
+    - Additionaly, user should be able to follow their favoite 
+      artists. When they follow an artist, they should see the upcoming
+      gigs of their favoite artist in the Gig feed 
+      
+Use Cases : 
+  - Extracted from requirements
+  - Express use case with few words 
+  - Details can come later 
+  - this approach  will made communication with team esier 
+
+How to extract use Case : 
+  - from requirements we extrat them by going throw  line by line 
+  - Looking for Verbs 
+  - we may extract same use case from defferant requirement
+  - Some use case indicate at some missing part of others use cases 
+    . For Example : 
+      + for ever word like 
+        add/Create or her sister (edit/Modify remove/Delete) 
+        we may have use case for edit/Modify , remove/Delete
+  - We may have same use case with same name but for defferant user 
+    . For Example : 
+      + UseCase 1 (User1)
+        UseCase 1 (User2)
+  - we add under use case name the data or some detail it use in {}
+   (Note : this is my preferance not golbal or sentific way )
+  - finaly Clean up by grouping use case in general title or big use case 
+
+
+Project Use Case : 
+
+    - Requirement : 
+      + GigHub is a mini social network that makes it realy easy
+        for live music lover to track the gigs of their favorite artists
+      
+        => Use Case : 
+                      @ Track/View gigs (so we had gigs ) 
+                              == Later ==> Manage  gigs (Add/Create , Delete , Update) 
+
+    - Requirement : 
+      + Artists can sing up and list their gigs. When adding a gig they should specify 
+        the date/time , location and gener of the gig
+      
+        => Use Case : 
+                      @ Sing up (so we had authentication )
+                          # Sing up / Creating Profile |
+                          # Log in                     |
+                          # Log out                    |==> Authentication (Which come with Asp.net frameworks)
+                          # Change Passowrd            |
+                          # Edit Profile               |
+                      @ Add Gigs 
+
+    - Requirement : 
+      + An artists should have a page called My Upcoming Gigs .
+        From there , they should be able to edit or remove an 
+        existing gig, or add another gig to the list 
+      
+        => Use Case : 
+                      @ Upcoming Gigs (artists)
+                      @ Add Gigs    
+                      @ Edite Gigs  
+                      @ Remove Gigs 
+
+    - Requirement : 
+      + user should be able to view all upcoming gigs or search 
+        them by artist, gener or location , they should be able to 
+        view details of a gig and add it to their calender.
+
+        => Use Case :                     
+                      @ Veiw upcoming gigs
+                      @ Search gigs 
+                      @ View gig details 
+                      @ Add gig to calender  (so we had remove and edite)
+
+    - Requirement : 
+      + Additionaly, user should be able to follow their favoite 
+        artists. When they follow an artist, they should see the upcoming
+        gigs of their favoite artist in the Gig feed
+
+        => Use Case :                     
+                      @ Follow artist ==so we had (Missing parts )==>
+                        # Follow artist
+                        # Unfollow artist
+                        # who i am follow
+                        # Gig feed (which is upcoming gigs but with other name )
+
+Clean Up Porject Use case:
+
+                      @ Sing up / Creating Profile |
+                      @ Log in                     |
+                      @ Log out                    |==> Authentication (Which come with Asp.net frameworks)
+                      @ Change Passowrd            |
+                      @ Edit Profile               |
+                                                 
+                      @ Upcoming Gigs (artists)    |                
+                      @ Upcoming Gigs (User)       |                
+                      @ Add Gigs                   |==> Gigs   
+                        {artist,gener,location}    |
+                      @ Edite Gigs                 |
+                      @ Remove Gigs                |
+                                                   
+                      @ Add Gigs to calender       |
+                        {Date time , Gig}          |
+                      @ Remove Gigs from calender  |==> Gigs Calender                
+                      @ View Gigs an attending     |       
+
+                      @ Follow artist    |
+                      @ Unfollow artist  |==> Following 
+                      @ who i am follow  |
+                      @ Gig feed         |
