@@ -1,6 +1,6 @@
 Porject 
 ========
-Projext Name : GigHub 
+Project Name : GigHub 
 ------------------------------------------------------------------------------------------------------------------------------------
 00 Before starting 
 =========================
@@ -296,4 +296,215 @@ Data annotation
 									This Identity property cannot be updated.
 			
 
+Finaly for this section we will pupulate Geners Table with data via Sql statment using c# code 
+	- so why did not go and build Admin and Gener pages and use sql woth 1st code approach 
+		+ simply becuse admin and Genre out of porject scope 
+			# this is a commnen problem where developer do something and find him self do and solve another sthing
+		+ sql via C# is easy simple fast 
+
+
+Pupulate Geners Table with data via Sql statment using c# code 
+	- create new Migration with name PapulateGenerTableWithData 
+	  (Alt+/+. to open package mananger console)   
+			+ Add-Migration PapulateGenerTableWithData
+	- Alt+Shift+N : write  PapulateGenerTableWithData and enter to go to file and on 
+	  Up method we will and the following Sql Code 
+	  
+			@Code 
+					public override void Up()
+					{
+						Sql("INSERT INTO Genres VALUES (1,'Jazz')");
+						Sql("INSERT INTO Genres VALUES (2,'Blues')");
+						Sql("INSERT INTO Genres VALUES (3,'Rock')");
+						Sql("INSERT INTO Genres VALUES (4,'Country')");
+					}
+	- Becuse we alter Up Method we need to do the same for Down Method so we can rollback
+			@Code
+					public override void Down()
+					{
+						Sql("DELETE FROM Genres WHERE Id ON(1,2,3,4)");
+					}
+
+	- Updat Database via Package Manager Console 
+			+ Update-DataBase
+------------------------------------------------------------------------------------------------------------------------------------
+
+05 Building a Form with Bootstrap
+===================================
+
+*** Most Important : Create Drop Donwlsit and Papulate With Data *** 
+
+- Add Gigcontroller to Controllers
+	+ we change the name of index action result to Create 
+				@ Code : 
+				        [HttpGet]
+						public ActionResult Create()
+						{
+							return View();
+						}
+	+ we will alter it later 
+- View Model Consept
+	+ Conseder View Model as same as Model for databse but for view
+	+ in Gig class we had DateTime porperty 
+		# which will break it to 2 properties in ViewModel so it will become 2 input filed on our view 
+	+ on Get 
+		# Controller => ViewModel => View
+	+ on Post 
+		# View => Controller => ViewModel => Model => Db 
+		# Note mostly every things come  from view come as string  
+	+ Any DataAnnotation  decoration like : [Dispaly]  [requier] [StringLingth] [Regx]...
+		and any DataAnnotation with effect the view 
+
+	+ If we need to esacp ViewModel approach so 
+		# on post View => Controller => Model => Db
+		# on get  Model=> Controller => View
+		# we can :
+				 > create bind and unbind properties in model
+					bind properties is the broken porperty in view Model 
+					unbind properties are the properties come form broken porperty 
+				 > map bind or unbind porperty on controller 
+						@ Code 
+							// in Controller Class
+							// this will Exclude one or more properties
+							public ActionResult Create([Bind(Exclude="Property1 Name","Property2 Name",...)] ModelClass Model)
+							{
+								...
+							}
+
+							// this will include one or more properties
+							public ActionResult Create([Bind(Include="Property1 Name","Property2 Name",...)] ModelClass Model)
+							{
+								...
+							}
+				> Process the data in contrller before handle it to model
+						@ Code
+							//FormCollection
+							[HttpPost]
+							public ActionResult Create(FormCollection collection)
+							{
+								// Get input value from FormCollection obeject which is here collection
+								// For FormCollection obeject datatype is array idexed by input name 
+								var InputValue = collection["{InputName}"];
+
+								// Process InputValue like convert to int 
+								ProcessValue = Convert.ToInt32(InputValue);
+
+								// make change to db context porperty 
+								DbContext.Porperty = ProcessValue
+								// code if modelstate change (not sure)
+								//save change 
+							}
+							// using Request
+							public ActionResult Create()
+							{
+								// Get Input value from Request object which is array indexd by InputName
+								var InputValue = Request["InputName"];
+
+								// Process InputValue like convert to int 
+								ProcessValue = Convert.ToInt32(InputValue);
+
+								// make change to db context porperty 
+								DbContext.Porperty = ProcessValue
+								// code if modelstate change (not sure)
+								//save change 
+							}
+
+	+ Create Folder "ViewModels"
+		# Add class GigFormViewModel 
+			> GigFormViewModel Properties is same as gig class but we breake some porperties to more than one 
+				to get effect on view 
+						@Code 
+							    public class GigFormViewModel
+								{
+									// not 
+									public string Venue { get; set; }
+									public string Date { get; set; }
+									public string Time { get; set; }
+									public int Genre { get; set; }
+									public IEnumerable<Genre> Genres { get; set; }
+
+								}
+- Create Gig view 
+	+ Create Folder inside View Folder name it as same as Controller name GigControllet so folder name is Gig
+	+ So create Folder "Gig"
+		# Create view file and name it as Action Method 
+			> our Action Method name is Create so file name is Create.cshtml
+	+ So now we can run porject and go to : 
+		# Https://localHost:{Port}/Controller/ActionMethod 
+			> Https://localHost:{Port}/Gig/Create
+			> Port= 44353 Here (may another port depend on porject setting)
+			> Https://localHost:44353/Gig/Create
+	+ Inside Create.cshtml we add model we work with which is GigFormViewModel
+		# just add @model ViewModels and hit Alt+enter so Resharper will resolve the namespace to become 
+			> @model Gighub.ViewModels.GigFormViewMode
+
+= Working with Bootstrap
+	+ Bootstrap is css framwork that give modern and resposive web page 
+	+ For bootstarp Form and input we should mamorise 3  css class
+		# form-group : to group web page controles like in one div label and input 
+						this will dispaly inputs  virtical 
+		# form-inline : this will dispaly inputs  hrizental
+		# form-control : to add bootstrap look and feel to input like text filed 
+							never used with label 
+
+- workin with razore 
+	+ Razore is view template rendering engien 
+	+ via razore we can paly C# with html 
+	+ to write C# we just start the line with @ 
+	+ to write C# in multi line we use @{ multi line code }
+	+ to comment in razore @* Comment *@
+
+- Add Inputs
+	+ We can access most inputs throw @Html 
+		# @Html.{InputFor}(Model=>Model.ModelPorerty)
+	+ To apply css class or html attribute we pass anynmuose obejct as second arrgument with new keyword
+		# @Html.{InputFor}(Model=>Model.ModelPorerty , new {@class= "CssClass",@placeholder="What want To Dispaly"})
+	+ Inputs : 
+		// Note m=>m.property m stand for Model
+		// Note : Css class is 
+		# Label : @Html.LabelFor(m=>m.ModelPorperty)
+		# Text Field :  @Html.TextBoxFor(m=>m.ModelPorperty, new { @class = "form-control", @placeholder = "label" })
+		# Drop Down List : @Html.DropDownListFor() // which will explan soon in detail 
+- Alter Controller to Build Genre dropDownLsit 
+	+ Add Prperties to Controller calss  
+		# we need to expose the entity model via  the controller deal with to GigController 
+		# we need to expose the view   model the controller deal with to GigController
+		# so we need 2 properties 
+				@Code : 
+						public class GigController : Controller
+						{
+							protected readonly ApplicationDbContext _Db;
+							protected readonly GigFormViewModel _GigFormViewModel;
+							[HttpGet]
+							public ActionResult Create()
+							{
+								return View();
+							}
+						}
+
+	+ Work with dependncy injection (DI)
+		# the most basic DI come via class constractore
+				@Code : 
+						public class GigController : Controller
+						{
+							protected readonly ApplicationDbContext _Db;
+							protected readonly GigFormViewModel _GigFormViewModel;
+							public GigController() : this(new ApplicationDbContext(), new GigFormViewModel())
+							{
+
+							}
+
+							public GigController(ApplicationDbContext Db, GigFormViewModel GigForm)
+							{
+								_Db = Db;
+								_GigFormViewModel = GigForm;
+							}
+							[HttpGet]
+							public ActionResult Create()
+							{
+								return View();
+							}
+						}		
 			
+	+ Papulate Genre dropDownLsit with data from model 
+- Build Genre dropDownLsit in view 
