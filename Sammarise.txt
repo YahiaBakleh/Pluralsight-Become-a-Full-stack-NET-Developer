@@ -1,0 +1,299 @@
+Porject 
+========
+Projext Name : GigHub 
+------------------------------------------------------------------------------------------------------------------------------------
+00 Before starting 
+=========================
+we use resharper 
+	so enable there shortcut keyboard 
+we use productivity tools 
+	go to tools => options => productivity Power tools
+				=> Power Commands 
+	enable both : 
+			Format on save 
+			remove and and sort using on save 
+
+01 Course Introduction
+=========================
+Project Requirement : 
+
+	-  GigHub is a mini social network that makes it realy easy
+	   for live music lover to track the gigs of their favorite artists 
+
+	- Artists can sing up and list their gigs. When adding a gig they should specify 
+	  the date/time , location and genre of the gig 
+
+	- An artists should have a page called My Upcoming Gigs .
+	  From there , they should be able to edit or remove an 
+	  existing gig, or add another gig to the list 
+	
+	- user should be able to view all upcoming gigs or search 
+	  them by artist, genre or location , they should be able to 
+	  view details of a gig and add it to their calender.
+	
+	- Additionaly, user should be able to follow their favoite 
+	  artists. When they follow an artist, they should see the upcoming
+	  gigs of their favoite artist in the Gig feed 
+	  
+Use Cases : 
+  - Extracted from requirements
+  - Express use case with few words 
+  - Details can come later 
+  - this approach  will made communication with team esier 
+
+How to extract use Case : 
+  - from requirements we extrat them by going throw  line by line 
+  - Looking for Verbs 
+  - we may extract same use case from defferant requirement
+  - Some use case indicate at some missing part of others use cases 
+	. For Example : 
+	  + for ever word like 
+		add/Create or her sister (edit/Modify remove/Delete) 
+		we may have use case for edit/Modify , remove/Delete
+  - We may have same use case with same name but for defferant user 
+	. For Example : 
+	  + UseCase 1 (User1)
+		UseCase 1 (User2)
+  - we add under use case name the data or some detail it use in {}
+   (Note : this is my preferance not golbal or sentific way )
+  - finaly Clean up by grouping use case in general title or big use case 
+
+
+Project Use Case : 
+
+	- Requirement : 
+	  + GigHub is a mini social network that makes it realy easy
+		for live music lover to track the gigs of their favorite artists
+	  
+		=> Use Case : 
+					  @ Track/View gigs (so we had gigs ) 
+							  == Later ==> Manage  gigs (Add/Create , Delete , Update) 
+
+	- Requirement : 
+	  + Artists can sing up and list their gigs. When adding a gig they should specify 
+		the date/time , location and genre of the gig
+	  
+		=> Use Case : 
+					  @ Sing up (so we had authentication )
+						  # Sing up / Creating Profile |
+						  # Log in                     |
+						  # Log out                    |==> Authentication (Which come with Asp.net frameworks)
+						  # Change Passowrd            |
+						  # Edit Profile               |
+					  @ Add Gigs 
+
+	- Requirement : 
+	  + An artists should have a page called My Upcoming Gigs .
+		From there , they should be able to edit or remove an 
+		existing gig, or add another gig to the list 
+	  
+		=> Use Case : 
+					  @ Upcoming Gigs (artists)
+					  @ Add Gigs    
+					  @ Edite Gigs  
+					  @ Remove Gigs 
+
+	- Requirement : 
+	  + user should be able to view all upcoming gigs or search 
+		them by artist, genre or location , they should be able to 
+		view details of a gig and add it to their calender.
+
+		=> Use Case :                     
+					  @ Veiw upcoming gigs
+					  @ Search gigs 
+					  @ View gig details 
+					  @ Add gig to calender  (so we had remove and edite)
+
+	- Requirement : 
+	  + Additionaly, user should be able to follow their favoite 
+		artists. When they follow an artist, they should see the upcoming
+		gigs of their favoite artist in the Gig feed
+
+		=> Use Case :                     
+					  @ Follow artist ==so we had (Missing parts )==>
+						# Follow artist
+						# Unfollow artist
+						# who i am follow
+						# Gig feed (which is upcoming gigs but with other name )
+
+Clean Up Porject Use case:
+
+					  @ Sing up / Creating Profile |
+					  @ Log in                     |
+					  @ Log out                    |==> Authentication (Which come with Asp.net frameworks)
+					  @ Change Passowrd            |
+					  @ Edit Profile               |
+												 
+					  @ Upcoming Gigs (artists)    |                
+					  @ Upcoming Gigs (User)       |                
+					  @ Add Gigs                   |  
+						{artist,genre,location}    |==> Gigs 
+					  @ Edite Gigs                 |
+					  @ Remove Gigs                |
+					  @ View gig detail            |
+												   
+					  @ Add Gigs to calender       |
+						{Date time , Gig}          |
+					  @ Remove gigs from calender  |==> Gigs Calender                
+					  @ View gigs am attending     |       
+
+					  @ Follow artist    |
+					  @ Unfollow artist  |==> Following 
+					  @ Who i am follow  |
+					  @ Gig feed         |
+
+some use case depend on other one 
+  - we can not remove or edite gig without adding one 
+	Unfollow artist ==depend on==> Follow artist ==depend on==> view Gigs
+
+after determain the dependecy for each use case we order them 
+
+we will drow the following chart base on dependecy , the implementation plan and data flow 
+
+	1                 2                          3                        4                     5                                                  
+		 |                            |                     |                        |                                                                        
+Add Gig  | My  upcoming gigs (artist) | Edit gig            | View gigs am attending | Remove gigs from 
+		 | All upcoming gigs          | remove gig          | Who i am follow        |       calender
+		 |                            | Add gig to calender | Gig Feed               |
+		 |                            | Follow artist       |                        | Unfollow artist
+		 |                            | search              |                        |
+		 |                            | View gig detail     |                        |
+		 |                            |                     |                        |
+		 |                            |                     |                        |
+
+From the chart above we pick the core use cases which will implement 
+------------------------------------------------------------------------------------------------------------------------------------
+
+03 Planning the First Iteration
+=================================
+------------------------------------------------------------------------------------------------------------------------------------
+
+04 Building a Model Using Code-first Workflow
+===============================================
+We start by 
+  - opening visual studio and create Asp.net (.Net) Project
+  - with name "Gighub"
+  - Mvc Template 
+  - with single user Authenticationt
+
+Before we build Models for our domain insure  entity fram work to the porject is installed 
+ we will Build our Progect to update the binary then we will  :
+	- Enable Migration
+	- Add Migration 
+	- create or Database 
+
+
+We can do that by using the following commands in Package Manager Console 
+ - Enable-Migrations
+	+ this will create Migration Folder with  Configration.cs
+	+ this command will run just once 
+ - Add-Migration {Migration Name}
+	+ this will add migration file to Migration folder 
+		@  the file name will Be {date the file created} + {Migration Name}
+	+ move change in models to database 
+ - Update-Database
+	+ this will create our database in App_Data folder and put .mdf file there 
+	+ database file name will come for the connectionStrings in Web.config file 
+		from the Catalog 
+
+
+Awlayse use smale change in model against database for smale migration  
+
+
+Now let create or Models {domain classes} inside Models folder  
+ - Models classes : 
+	+ Gig
+	+ Gennera 
+
+	# Note : will will create this classes in one file (Gig class)
+	         then use resharper to move the 2end class to saparate class file  
+			 by using shortcut : Alt + Enter then	
+											move to {className.cs} ==>  Move types to matching file in files 
+		@ Code : 
+					// Gig class 
+					    public class Gig
+						{
+							public ApplicationUser Artist { get; set; }
+							public DateTime DateTime { get; set; }
+							public string Venue { get; set; }
+							public genre genre { get; set; }
+
+						}
+					// genre class
+						public class Genre
+						{
+							public byte Id { get; set; }
+							public string Name { get; set; }
+						}
+						
+  # Note : ApplicationUser is class can found in our project in IdentityModels.cs
+			drived from IdentityUser class
+
+Any running Migration aginst databse will not updated 
+	- Becuse we did not add the model as entity in our ApplicationDbContext Class
+	- ApplicationDbContext Class can be found in IdentityModels.cs
+	- we make IdentityModels.cs file more cleaner by moving ApplicationContext to another file 
+		+ by useing  resharper Alt + Enter => Move types to matching file in files 
+
+In ApplicationContext.cs , ApplicationContext class we add the following line of code 
+		@ Code : 
+			
+			    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+				{
+
+					public DbSet<Gig> Giggs { get; set; }
+					public DbSet<Genres> Genres { get; set; }
+
+					...
+				}
+
+Now if we run 
+	- Add-Migration ModelsMigration
+	- Update-Database
+		+ we will get Giggs table in databse with Artest_Id as foreng key 
+
+If we go to Table Defination to Gig table we will find Venue Column Data type is nvarchar(Max) and nullable 
+ becuse we put venue property in gig class as string data type so it wikl merrorise as nvarchar(Max)
+
+To get more controle on database via code we we had 2 ways
+	- Data annotation
+		+ has limtaion 
+		+ easy to use
+	- flulant api 
+		+ stronger and get more controle on database via code
+		+ harder to learn 
+
+For now we will use Data annotation
+
+Data annotation
+	- Live in using System.ComponentModel.DataAnnotations;
+	- We use property decoration which is 
+		+ [] over the porperty line 
+			@Code 
+				public Class ClassName 
+				{
+					[Data Annotation]
+					Class Property {get; set;}
+				}
+	- most used data anotation :
+		+ [Key] : to set property as primary key in data base
+		+ [Requier] : denay nullable 
+		+ [StringLength(maximumLingth,errormessage)] : set the varchar , nvarchar or string lingth in column 
+		+ [Dispaly(Name="")] : Using this attribute we can specify property name to be displayed on view
+		+ [Column (string name, Properties:[Order = int],[TypeName = string])
+			configure the corresponding column name, data type and order in a database table
+				# name: Name of a column in a db table.
+				# Order: Order of a column, starting with zero index. (Optional)
+				# TypeName: Data type of a column. (Optional)
+		+ [DataType(DataType.{Text Email Password})] This attribute is used to specify the datatype of the model and reflect it on view.
+		+ [DatabaseGenerated(DatabaseGeneratedOption.{None Identity})]
+			DatabaseGeneratedOption.None : 
+									option specifies that the value of a property will not 
+									be generated by the underlying database
+			DatabaseGeneratedOption.Identity: 
+									You can mark the non-key (non-id) properties as DB-generated properties
+									the value of the property will be generated by the database on the INSERT statement. 
+									This Identity property cannot be updated.
+			
+
+			
