@@ -343,6 +343,7 @@ Pupulate Geners Table with data via Sql statment using c# code
 							return View();
 						}
 	+ we will alter it later 
+
 - View Model Consept
 	+ Conseder View Model as same as Model for databse but for view
 	+ in Gig class we had DateTime porperty 
@@ -420,10 +421,20 @@ Pupulate Geners Table with data via Sql statment using c# code
 									public string Venue { get; set; }
 									public string Date { get; set; }
 									public string Time { get; set; }
+									//the follwing propert is for dropdown list 
+									//binding value 
 									public int Genre { get; set; }
+									// list Data : list view items 
 									public IEnumerable<Genre> Genres { get; set; }
 
 								}
+- workin with razore 
+	+ Razore is view template rendering engien 
+	+ via razore we can paly C# within html 
+	+ to write C# we just start the line with @ 
+	+ to write C# in multi line we use @{ multi line code }
+	+ to comment in razore @* Comment *@
+
 - Create Gig view 
 	+ Create Folder inside View Folder name it as same as Controller name GigControllet so folder name is Gig
 	+ So create Folder "Gig"
@@ -438,6 +449,36 @@ Pupulate Geners Table with data via Sql statment using c# code
 		# just add @model ViewModels and hit Alt+enter so Resharper will resolve the namespace to become 
 			> @model Gighub.ViewModels.GigFormViewMode
 
+- Working with shared Folder 
+	+ This folder can be founded inside View Folder 
+	+ Is contain the master page or shared layout "_Layout.cshtml" , partial views , static html/cshtml files 
+		like "error.cshtml" 
+
+- working with link "Action link"
+	+ To go fast to Https://localHost:44353/Gig/Create
+		# we will create a link
+		# asp.net razore had method for it .ActionLink() :
+			> we can access throw @Html 
+			> razore engine will rander it to html to link <a href=""> Label </a>  
+		# @Html.ActionLink("Link Label or Text" ,"Action Method" ,"Controller Name" ,	Route Values   , Html Attribute)
+		  @Html.ActionLink("Application name"	,	"Index"		 ,		"Home"		, new { area = "" }, new { @class = "navbar-brand" }) 
+				@Code : 
+						@Html.ActionLink("Add Gig","Create","Gig")
+- working with dynamic contant
+	# Most dynamic contant is contant comes from data base 
+	# we rander it throw :
+		 @RenderBody()
+	# we place this method inside _Layout.cshtml
+
+- working with Partial view 
+	# Partial View: is a small piece of content that may be reused on different pages,
+					or multiple times in a page
+	# We create Partial view file inside  Views/Shared 
+	# we render it view : @Html.Partial("Partial view Name")
+		@ code 
+			@Html.Partial("_LoginPartial")
+			@* Where we had decoment named _LoginPartial.cshtml *@
+	
 = Working with Bootstrap
 	+ Bootstrap is css framwork that give modern and resposive web page 
 	+ For bootstarp Form and input we should mamorise 3  css class
@@ -447,17 +488,47 @@ Pupulate Geners Table with data via Sql statment using c# code
 		# form-control : to add bootstrap look and feel to input like text filed 
 							never used with label 
 
-- workin with razore 
-	+ Razore is view template rendering engien 
-	+ via razore we can paly C# with html 
-	+ to write C# we just start the line with @ 
-	+ to write C# in multi line we use @{ multi line code }
-	+ to comment in razore @* Comment *@
 
-- Add Inputs
+- Create the Form
+	Note : this topic "Create the Form" is advanced one 
+			Come from saveing data section 
+			where use razore to create the form 
+	+ We can access most Form throw @Html
+	+ With method @Html.BeginForm()
+	+ to use it corectly we put it inside @Useing(){} statment
+		# so it will render corectlty to html with Begin and closing form tag <form></form>
+	+ BeginForm() most complex overload one Take 4 parameters BeginForm(val1, val2 ,val3 , val4) :
+		# val1 : Action method which is Create
+		# val2 : Controller which is Gig
+		# val3 : is  FormMethod which is : 
+			> FormMethod.Get 
+			> FormMethod.Post 
+			
+		# val4 : To apply css class we pass anynmuose obejct new keyword
+				
+				@Code 
+					@using (Html.BeginForm("ActionMetod", "Controller", FormMethod.{Get or Post}, new {@class="CssClass"}))
+					{
+						// Inputs 
+					}
+
+				@code 
+					// what we use 
+					// we will use overload method BeginForm(Action , Controller)
+					// this method do not contain therd argument becuse we declare it the get and post inside Controller 
+					// via decoration [HttpGet] [HttpPost]
+
+					@using (Html.BeginForm("Create", "Gig"))
+					{
+						//Inputs 
+
+					}
+				
+- Add Inputs	
 	+ We can access most inputs throw @Html 
 		# @Html.{InputFor}(Model=>Model.ModelPorerty)
-	+ To apply css class or html attribute we pass anynmuose obejct as second arrgument with new keyword
+	+ To apply css class we pass anynmuose obejct new keyword
+		to apply html attribute we pass  as  second arrgument in the anynmuose obejct 
 		# @Html.{InputFor}(Model=>Model.ModelPorerty , new {@class= "CssClass",@placeholder="What want To Dispaly"})
 	+ Inputs : 
 		// Note m=>m.property m stand for Model
@@ -465,10 +536,25 @@ Pupulate Geners Table with data via Sql statment using c# code
 		# Label : @Html.LabelFor(m=>m.ModelPorperty)
 		# Text Field :  @Html.TextBoxFor(m=>m.ModelPorperty, new { @class = "form-control", @placeholder = "label" })
 		# Drop Down List : @Html.DropDownListFor() // which will explan soon in detail 
+			@Code 
+				// add this inside form 
+				<div class="form-group">
+					@Html.TextBoxFor(m => m.Venue, new { @class = "form-control", @placeholder = "Venue" })
+				</div>
+				<div class="form-group form-inline">
+					@Html.TextBoxFor(m => m.Time, new { @class = "form-control", @placeholder = "Time" })
+					@Html.TextBoxFor(m => m.Date, new { @class = "form-control", @placeholder = "Date" })
+				</div>
+				<div class="form-group">
+					@Html.DropDownListFor(m => m.Genre, new SelectList(Model.Genres, "Id", "Name"), "", new { @class = "form-control" })
+					@* @Html.DropDownListFor(m => m.Genre, new SelectList(Model.Genres, "Id", "Name"), "", new { @class = "form-control" }) *@
+				</div>
+				<button type="submit" class="btn btn-primary">Save</button>
+
 - Alter Controller to Build Genre dropDownLsit 
-	+ Add Prperties to Controller calss  
-		# we need to expose the entity model via  the controller deal with to GigController 
-		# we need to expose the view   model the controller deal with to GigController
+	+ Add Prperties to Controller class  
+		# we need to expose the entity model on the controller GigController 
+		# we need to expose the view model to the controller to deal with GigController
 		# so we need 2 properties 
 				@Code : 
 						public class GigController : Controller
@@ -507,4 +593,64 @@ Pupulate Geners Table with data via Sql statment using c# code
 						}		
 			
 	+ Papulate Genre dropDownLsit with data from model 
+				@Code : 
+						public class GigController : Controller
+						{
+							protected readonly ApplicationDbContext _Db;
+							protected readonly GigFormViewModel _GigFormViewModel;
+							public GigController() : this(new ApplicationDbContext(), new GigFormViewModel())
+							{
+
+							}
+
+							public GigController(ApplicationDbContext Db, GigFormViewModel GigForm)
+							{
+								_Db = Db;
+								_GigFormViewModel = GigForm;
+							}
+							[HttpGet]
+							public ActionResult Create()
+							{
+								var ViewModel = _GigFormViewModel;
+								ViewModel.Genre = _Db.Genre.ToList();
+								return View();
+							}
+							// Or 
+							//public ActionResult Create()
+							//{
+								//            var ViewModel = new GigFormViewModel
+								//            {
+								//                Genres = _Db.Genres.ToList()
+								//            };
+								//return View(ViewModel);
+							}
+						}
 - Build Genre dropDownLsit in view 
+  @Html.DropDownListFor(m => m.Genre   , new SelectList(Model.Genres,            "Id"                ,          "Name"             ) ,            ""          , new {@class = "form-control"})
+//@Html.DropDownListFor(Binding Porpert, new SelectList(Data Source , Name of porperty in Genre class, The Dispalay label which is ) , defulat selected value ,				css calss        )
+																			 that use as value of			a property name in 
+																			     list opetios					Genre class
+
+- Add submit button 
+				@ Code
+					<button type="submit"  class="btn btn-default">Save</button>
+
+		+ always submit button take 2 css classes
+				# btn as promary class 
+				# btn-{value} as secondary class 
+					> Value : 
+						defualt => for whit button 
+						primary => for blue button 
+						success => for green button 
+						warning => for orange button 
+						danger	=> for red button 
+						info	=> for lite blue button
+						link	=> for link button => this will create link insted of button 
+
+------------------------------------------------------------------------------------------------------------------------------------
+i follow from here without writting if i back taking note i should start from 1st vedio on saveing data section 
+and only write the section title i watched 
+
+06 Saving Data
+================
+
