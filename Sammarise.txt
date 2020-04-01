@@ -15,7 +15,7 @@ we use productivity tools
 
 01 Course Introduction
 =========================
-Project Requirement : 
+Project Sammary & Requirement : 
 
 	-  GigHub is a mini social network that makes it realy easy
 	   for live music lover to track the gigs of their favorite artists 
@@ -151,8 +151,8 @@ after determain the dependecy for each use case we order them
 we will drow the following chart base on dependecy , the implementation plan and data flow 
 
 	1                 2                          3                        4                     5                                                  
-		 |                            |                     |                        |                                                                        
-Add Gig  | My  upcoming gigs (artist) | Edit gig            | View gigs am attending | Remove gigs from 
+		 |                            |                     |                        |                                                    Add Gig |		               |		     |			      |	            
+		 | My  upcoming gigs (artist) | Edit gig            | View gigs am attending | Remove gigs from 
 		 | All upcoming gigs          | remove gig          | Who i am follow        |       calender
 		 |                            | Add gig to calender | Gig Feed               |
 		 |                            | Follow artist       |                        | Unfollow artist
